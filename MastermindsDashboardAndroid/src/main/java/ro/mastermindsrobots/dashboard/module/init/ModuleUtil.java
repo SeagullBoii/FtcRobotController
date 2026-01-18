@@ -1,9 +1,9 @@
-package ro.mastermindsrobotics.dashboard.module.init;
+package ro.mastermindsrobots.dashboard.module.init;
 
 import java.util.List;
 
-import ro.mastermindsrobotics.dashboard.module.AbstractDashboardModule;
-import ro.mastermindsrobotics.dashboard.module.interfaces.DashboardModule;
+import ro.mastermindsrobots.dashboard.module.AbstractDashboardModule;
+import ro.mastermindsrobots.dashboard.module.interfaces.DashboardModule;
 
 public class ModuleUtil {
     public static void initModules(List<AbstractDashboardModule> modules, ModuleInitContext context) {

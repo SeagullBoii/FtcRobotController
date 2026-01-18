@@ -1,4 +1,4 @@
-package ro.mastermindsrobotics.dashboard.module.interfaces;
+package ro.mastermindsrobots.dashboard.module.interfaces;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 

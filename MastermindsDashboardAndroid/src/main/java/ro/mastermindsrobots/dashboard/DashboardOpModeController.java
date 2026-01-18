@@ -1,4 +1,4 @@
-package ro.mastermindsrobotics.dashboard;
+package ro.mastermindsrobots.dashboard;
 
 import android.os.Handler;
 import android.os.Looper;

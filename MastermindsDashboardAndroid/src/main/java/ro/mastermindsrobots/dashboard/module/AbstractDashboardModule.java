@@ -1,6 +1,6 @@
-package ro.mastermindsrobotics.dashboard.module;
+package ro.mastermindsrobots.dashboard.module;
 
-import ro.mastermindsrobotics.dashboard.module.interfaces.DashboardModule;
+import ro.mastermindsrobots.dashboard.module.interfaces.DashboardModule;
 
 public abstract class AbstractDashboardModule implements DashboardModule {
     private boolean enabled = true;

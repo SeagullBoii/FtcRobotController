@@ -1,11 +1,11 @@
-package ro.mastermindsrobotics.dashboard.module.core;
+package ro.mastermindsrobots.dashboard.module.core;
 
 import android.util.Log;
 
 import java.io.File;
 import java.util.Objects;
 
-import ro.mastermindsrobotics.dashboard.module.AbstractDashboardModule;
+import ro.mastermindsrobots.dashboard.module.AbstractDashboardModule;
 
 public class ConfigurableVariablesModule extends AbstractDashboardModule {
     public static final String TAG = "ConfigurableVariablesModule";

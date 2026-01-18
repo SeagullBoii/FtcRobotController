@@ -1,4 +1,4 @@
-package ro.mastermindsrobotics.dashboard.module;
+package ro.mastermindsrobots.dashboard.module;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 

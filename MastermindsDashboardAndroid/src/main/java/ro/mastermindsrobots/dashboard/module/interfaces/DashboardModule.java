@@ -1,4 +1,4 @@
-package ro.mastermindsrobotics.dashboard.module.interfaces;
+package ro.mastermindsrobots.dashboard.module.interfaces;
 
 /**
  * Base interface for all dashboard modules.

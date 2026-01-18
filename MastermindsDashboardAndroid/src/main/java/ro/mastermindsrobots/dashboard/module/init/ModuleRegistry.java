@@ -1,11 +1,11 @@
-package ro.mastermindsrobotics.dashboard.module.init;
+package ro.mastermindsrobots.dashboard.module.init;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
-import ro.mastermindsrobotics.dashboard.module.interfaces.DashboardModule;
-import ro.mastermindsrobotics.dashboard.module.interfaces.HardwareMapUser;
+import ro.mastermindsrobots.dashboard.module.interfaces.DashboardModule;
+import ro.mastermindsrobots.dashboard.module.interfaces.HardwareMapUser;
 
 public class ModuleRegistry {
     private static final Map<Class<?>, BiConsumer<DashboardModule, ModuleInitContext>> registry = new HashMap<>();

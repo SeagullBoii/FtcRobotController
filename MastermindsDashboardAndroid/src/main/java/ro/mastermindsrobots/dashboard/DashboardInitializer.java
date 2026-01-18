@@ -1,6 +1,6 @@
-package ro.mastermindsrobotics.dashboard;
+package ro.mastermindsrobots.dashboard;
 
-import static ro.mastermindsrobotics.dashboard.DashboardServer.DEFAULT_PORT;
+import static ro.mastermindsrobots.dashboard.DashboardServer.DEFAULT_PORT;
 
 import android.content.Context;
 import android.os.Handler;

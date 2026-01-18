@@ -1,4 +1,4 @@
-package ro.mastermindsrobotics.dashboard.module.core;
+package ro.mastermindsrobots.dashboard.module.core;
 
 import android.util.Log;
 
@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import ro.mastermindsrobotics.dashboard.module.AbstractDashboardModule;
-import ro.mastermindsrobotics.dashboard.module.interfaces.HardwareMapUser;
+import ro.mastermindsrobots.dashboard.module.AbstractDashboardModule;
+import ro.mastermindsrobots.dashboard.module.interfaces.HardwareMapUser;
 
 public class BatteryVoltageModule extends AbstractDashboardModule implements HardwareMapUser {
     private Supplier<HardwareMap> hardwareMap;

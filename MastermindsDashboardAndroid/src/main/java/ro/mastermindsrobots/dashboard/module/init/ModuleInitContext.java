@@ -1,11 +1,11 @@
-package ro.mastermindsrobotics.dashboard.module.init;
+package ro.mastermindsrobots.dashboard.module.init;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.function.Supplier;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import ro.mastermindsrobotics.dashboard.DashboardServer;
+import ro.mastermindsrobots.dashboard.DashboardServer;
 
 /**
  * <strong>ModuleInitContext</strong> provides dynamic access to robot dependencies such as

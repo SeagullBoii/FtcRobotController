@@ -1,6 +1,4 @@
-package ro.mastermindsrobotics.dashboard;
-
-import static java.lang.Math.min;
+package ro.mastermindsrobots.dashboard;
 
 import android.content.Context;
 import android.os.Handler;
@@ -16,10 +14,10 @@ import java.io.InputStream;
 import java.util.List;
 
 import fi.iki.elonen.NanoHTTPD;
-import ro.mastermindsrobotics.dashboard.module.AbstractDashboardModule;
-import ro.mastermindsrobotics.dashboard.module.init.ModuleInitContext;
-import ro.mastermindsrobotics.dashboard.module.init.ModuleUtil;
-import ro.mastermindsrobotics.dashboard.module.core.BatteryVoltageModule;
+import ro.mastermindsrobots.dashboard.module.AbstractDashboardModule;
+import ro.mastermindsrobots.dashboard.module.init.ModuleInitContext;
+import ro.mastermindsrobots.dashboard.module.init.ModuleUtil;
+import ro.mastermindsrobots.dashboard.module.core.BatteryVoltageModule;
 
 public class DashboardServer extends NanoHTTPD {
     public static final int DEFAULT_PORT = 21050;
@@ -93,14 +91,14 @@ public class DashboardServer extends NanoHTTPD {
 
     private Response serveAsset(String fileName, String mimeType) {
         if (appContext == null) {
-            return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "text/plain", "Context not available");
+            return NanoHTTPD.newFixedLengthResponse(Response.Status.INTERNAL_ERROR, "text/plain", "Context not available");
         }
         try {
             InputStream stream = appContext.getAssets().open(fileName);
-            return newChunkedResponse(Response.Status.OK, mimeType, stream);
+            return NanoHTTPD.newChunkedResponse(Response.Status.OK, mimeType, stream);
         } catch (IOException e) {
             Log.e(TAG, "Failed to serve asset: " + fileName, e);
-            return newFixedLengthResponse(Response.Status.NOT_FOUND, "text/plain", "Asset not found");
+            return NanoHTTPD.newFixedLengthResponse(Response.Status.NOT_FOUND, "text/plain", "Asset not found");
         }
     }
 
@@ -116,14 +114,14 @@ public class DashboardServer extends NanoHTTPD {
                     Object data = module.returnData();
                     String json = gson.toJson(data);
 
-                    return newFixedLengthResponse(
+                    return NanoHTTPD.newFixedLengthResponse(
                             Response.Status.OK,
                             "application/json",
                             json
                     );
                 } catch (Exception e) {
                     Log.e(TAG, "Failed to serve API route: " + route, e);
-                    return newFixedLengthResponse(
+                    return NanoHTTPD.newFixedLengthResponse(
                             Response.Status.INTERNAL_ERROR,
                             "text/plain",
                             "Failed to retrieve module data"
@@ -132,7 +130,7 @@ public class DashboardServer extends NanoHTTPD {
             }
         }
 
-        return newFixedLengthResponse(
+        return NanoHTTPD.newFixedLengthResponse(
                 Response.Status.NOT_FOUND,
                 "text/plain",
                 "Unknown API route"
@@ -151,28 +149,8 @@ public class DashboardServer extends NanoHTTPD {
             case "/index.html":
                 double voltage = 9999;
                 for (VoltageSensor sensor : opModeManager.getHardwareMap().voltageSensor) {
-                    voltage = min(voltage, sensor.getVoltage());
+                    voltage = Math.min(voltage, sensor.getVoltage());
                 }
-
-                String html = "<!DOCTYPE html>\n" +
-                        "<html lang=\"en\">\n" +
-                        "<head>\n" +
-                        "  <meta charset=\"UTF-8\">\n" +
-                        "  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-                        "  <title>Robot Dashboard</title>\n" +
-                        "  <style>\n" +
-                        "    body { font-family: Arial, sans-serif; background-color: #f0f0f0; padding: 20px; }\n" +
-                        "    h1 { color: #333; }\n" +
-                        "    #batteryVoltage { font-weight: bold; }\n" +
-                        "  </style>\n" +
-                        "</head>\n" +
-                        "<body>\n" +
-                        "  <h1>Robot Dashboard</h1>\n" +
-                        "  <p>Battery Voltage: <span id=\"batteryVoltage\">" +
-                        (voltage >= 0 ? String.format("%.2f V", voltage) : "N/A") +
-                        "</span></p>\n" +
-                        "</body>\n" +
-                        "</html>";
                 return serveAsset("dashboard/index.html", "text/html");
 
             case "/style.css":
@@ -183,7 +161,7 @@ public class DashboardServer extends NanoHTTPD {
 
             default:
                 Log.w(TAG, "Unknown route: " + uri);
-                return newFixedLengthResponse(
+                return NanoHTTPD.newFixedLengthResponse(
                         Response.Status.NOT_FOUND,
                         "text/plain",
                         "404 Not Found"
