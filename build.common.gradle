@@ -17,7 +17,10 @@
 
 import java.util.regex.Pattern
 
-apply plugin: 'com.android.application'
+if (!project.hasProperty('isLibraryModule') || project.property('isLibraryModule') == "false")
+    apply plugin: 'com.android.application'
+else
+    apply plugin: 'com.android.library'
 
 android {
 
@@ -49,7 +52,9 @@ android {
 
     defaultConfig {
         signingConfig signingConfigs.debug
-        applicationId 'com.qualcomm.ftcrobotcontroller'
+
+        if (!project.hasProperty('isLibraryModule') || project.property('isLibraryModule') == "false")
+            applicationId 'com.qualcomm.ftcrobotcontroller'
         minSdkVersion 24
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 28
