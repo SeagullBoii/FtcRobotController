@@ -21,7 +21,7 @@ public class DashboardInitializer {
     private static final int RETRY_DELAY_MS = 200;
 
     @OnCreateEventLoop
-    public static void initDashboard(Context context, EventLoop eventLoop) {
+    public static EventLoop onCreateEventLoop(Context context, EventLoop eventLoop) {
         Log.i(TAG, "Starting Dashboard server...");
 
         DashboardServer server = DashboardServer.getInstance(context);
@@ -50,6 +50,8 @@ public class DashboardInitializer {
         }
 
         pollForOpModesReady(server, 0);
+
+        return eventLoop;  // Important: return the eventLoop
     }
 
     private static void pollForOpModesReady(DashboardServer server, int attempt) {

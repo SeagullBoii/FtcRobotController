@@ -1,8 +1,8 @@
-package ro.mastermindsrobotics.dashboard.module.interfaces;
+package ro.mastermindsrobotics.dashboard.interfaces;
 
 import java.util.function.Supplier;
 
-import ro.mastermindsrobotics.dashboard.module.TelemetryMenu;
+import ro.mastermindsrobotics.dashboard.TelemetryMenu;
 
 public interface TelemetryMenuUser {
     void setTelemetryMenu(Supplier<TelemetryMenu> telemetryMenu);

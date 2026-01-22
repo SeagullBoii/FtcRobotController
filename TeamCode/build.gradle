@@ -25,4 +25,8 @@ android {
 
 dependencies {
     implementation project(':FtcRobotController')
+    implementation project(':MastermindsDashboardAndroid')
+    
+    // Use the annotation processor from the Java dashboard module
+    annotationProcessor project(':MastermindsDashboardJava')
 }

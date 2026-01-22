@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import ro.mastermindsrobotics.dashboard.module.AbstractDashboardModule;
-import ro.mastermindsrobotics.dashboard.module.interfaces.HardwareMapUser;
+import ro.mastermindsrobotics.dashboard.interfaces.HardwareMapUser;
 
 public class BatteryVoltageModule extends AbstractDashboardModule implements HardwareMapUser {
     private Supplier<HardwareMap> hardwareMap;

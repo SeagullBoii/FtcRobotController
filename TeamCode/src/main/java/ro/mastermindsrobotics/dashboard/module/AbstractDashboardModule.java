@@ -1,6 +1,6 @@
 package ro.mastermindsrobotics.dashboard.module;
 
-import ro.mastermindsrobotics.dashboard.module.interfaces.DashboardModule;
+import ro.mastermindsrobotics.dashboard.interfaces.DashboardModule;
 
 public abstract class AbstractDashboardModule implements DashboardModule {
     private boolean enabled = true;
@@ -17,6 +17,10 @@ public abstract class AbstractDashboardModule implements DashboardModule {
 
     @Override
     public void readData() {
+    }
+
+    @Override
+    public void init() {
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ro.mastermindsrobotics.dashboard.module.interfaces;
+package ro.mastermindsrobotics.dashboard.interfaces;
 
 /**
  * Base interface for all dashboard modules.
@@ -49,6 +49,12 @@ public interface DashboardModule {
      * <p>This method is typically called periodically (e.g. every loop cycle).</p>
      */
     void readData();
+
+
+    /**
+     * <p>This method is called on server init.</p>
+     */
+    void init();
 
     /**
      * Enables or disables this module.

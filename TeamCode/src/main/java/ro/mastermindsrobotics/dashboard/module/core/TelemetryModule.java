@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerNotifier;
 import java.util.function.Supplier;
 
 import ro.mastermindsrobotics.dashboard.module.AbstractDashboardModule;
-import ro.mastermindsrobotics.dashboard.module.TelemetryMenu;
-import ro.mastermindsrobotics.dashboard.module.interfaces.TelemetryMenuUser;
+import ro.mastermindsrobotics.dashboard.TelemetryMenu;
+import ro.mastermindsrobotics.dashboard.interfaces.TelemetryMenuUser;
 
 public class TelemetryModule extends AbstractDashboardModule
         implements TelemetryMenuUser, OpModeManagerNotifier.Notifications {
