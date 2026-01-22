@@ -300,6 +300,8 @@ body {
 .buttons {
     display: flex;
     gap: 0.5rem;
+    box-sizing: border-box;
+    flex-direction: row-reverse;
 }
 
 .save-button,
@@ -312,8 +314,23 @@ body {
     font-size: 16px;
     cursor: pointer;
     margin-top: 30px;
-    width: 100%;
+    width: fit-content;
+    max-width: fit-content;
     font-family: inherit;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    display: flex;
+}
+
+.refresh-button {
+    aspect-ratio: 1 / 1;
+    padding: 12px;
+    box-sizing: border-box;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .save-button:hover,
@@ -322,7 +339,10 @@ body {
 }
 
 .refresh-button svg {
-    width: 30px;
+    width: 20px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-content {
