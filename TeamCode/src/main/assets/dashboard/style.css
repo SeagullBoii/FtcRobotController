@@ -189,28 +189,7 @@ body {
     font-size: 16px;
 }
 
-.buttons {
-    display: flex;
-}
 
-.save-button,
-.refresh-button {
-    background: #7c5e94;
-    color: white;
-    border: none;
-    padding: 12px 30px;
-    border-radius: 8px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 30px;
-    width: 100%;
-    font-family: inherit;
-}
-
-.save-button:hover,
-.refresh-button:hover {
-    background: #6d4f85;
-}
 
 .modal {
     display: none;
@@ -318,7 +297,13 @@ body {
     border-radius: 8px;
 }
 
-.save-button {
+.buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.save-button,
+.refresh-button {
     background: #3e2d40;
     color: white;
     border: none;
@@ -331,8 +316,13 @@ body {
     font-family: inherit;
 }
 
-.save-button:hover {
+.save-button:hover,
+.refresh-button:hover {
     background: #4e3d50;
+}
+
+.refresh-button svg {
+    width: 30px;
 }
 
 .modal-content {
