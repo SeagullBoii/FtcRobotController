@@ -1,72 +1,98 @@
 package ro.mastermindsrobotics.dashboard.interfaces;
 
+import fi.iki.elonen.NanoHTTPD;
+
 /**
  * Base interface for all dashboard modules.
  *
- * <p>A {@code DashboardModule} represents a unit of data that can be
- * periodically read from the robot and exposed to the dashboard backend.</p>
+ * <p>A {@code DashboardModule} represents a self-contained unit of data
+ * exposed by the dashboard backend. Each module owns a unique API route
+ * and is responsible for handling incoming requests and publishing data
+ * to the frontend.</p>
  *
  * <p>Typical lifecycle:
  * <ol>
- *   <li>Module is created</li>
- *   <li>Dependencies are injected (e.g. HardwareMap) at the end of server init</li>
- *   <li>{@link #readData()} is called periodically</li>
- *   <li>{@link #returnData()} is called to publish data</li>
+ *   <li>Module instance is created</li>
+ *   <li>Dependencies are injected during server initialization</li>
+ *   <li>{@link #init()} is called once when the server is ready</li>
+ *   <li>{@link #onRequest(NanoHTTPD.IHTTPSession)} is invoked for each
+ *       incoming API request targeting this module</li>
+ *   <li>{@link #returnData()} is called to serialize and publish the
+ *       module's latest data</li>
  * </ol>
  * </p>
  */
 public interface DashboardModule {
 
     /**
-     * @return a unique identifier for this module
+     * Returns a unique identifier for this module.
+     *
+     * <p>The default implementation typically returns the simple class name,
+     * but implementations may override this if a stable or custom identifier
+     * is required.</p>
+     *
+     * @return a unique module identifier
      */
     String getId();
 
     /**
-     * Returns the backend route used to send and retrieve this module's data.
+     * Returns the API route associated with this module.
      *
-     * <p>This route must be unique across all modules and should be stable,
-     * as it is used by the dashboard to associate incoming data.</p>
+     * <p>This route is appended to {@code /api/} and must be unique across
+     * all registered modules. The frontend uses this route to send requests
+     * and retrieve data for the module.</p>
      *
      * @return the backend API route for this module
      */
     String getRoute();
 
     /**
-     * Returns the most recently read data for this module.
+     * Returns the most recently produced data for this module.
      *
-     * <p>This method should <b>not</b> perform hardware access.
-     * Hardware polling should be done in {@link #readData()}.</p>
+     * <p>This method should be side-effect free and must not perform
+     * hardware access or request parsing. Any request-dependent logic
+     * should be handled in {@link #onRequest(NanoHTTPD.IHTTPSession)}.</p>
      *
-     * @return the data object to be sent to the dashboard, or {@code null}
-     *         if no data is available
+     * @return an object to be serialized and sent to the frontend,
+     *         or {@code null} if no data is available
      */
     Object returnData();
 
     /**
-     * Reads data from hardware or other sources and caches it internally.
+     * Handles an incoming HTTP request for this module.
      *
-     * <p>This method is typically called periodically (e.g. every loop cycle).</p>
+     * <p>This method is invoked by the server whenever an API request
+     * targeting this module's route is received. Implementations may
+     * read query parameters, headers, or request bodies and update
+     * internal state accordingly.</p>
+     *
+     * <p>This method should return quickly and must not block.</p>
+     *
+     * @param session the HTTP request session associated with the API call
      */
-    void readData();
-
+    void onRequest(NanoHTTPD.IHTTPSession session);
 
     /**
-     * <p>This method is called on server init.</p>
+     * Called once after the server has finished initializing and all
+     * dependencies have been injected.
+     *
+     * <p>Modules should perform any required setup here.</p>
      */
     void init();
 
     /**
      * Enables or disables this module.
      *
-     * <p>Disabled modules should avoid reading hardware or publishing data.</p>
+     * <p>Disabled modules should avoid handling requests and publishing data.</p>
      *
      * @param enabled whether the module should be enabled
      */
     void setEnabled(boolean enabled);
 
     /**
-     * @return {@code true} if the module is currently enabled
+     * Indicates whether this module is currently enabled.
+     *
+     * @return {@code true} if the module is enabled
      */
     boolean isEnabled();
 }

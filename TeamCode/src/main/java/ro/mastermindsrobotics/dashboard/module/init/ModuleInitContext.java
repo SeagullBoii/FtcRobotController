@@ -3,9 +3,11 @@ package ro.mastermindsrobotics.dashboard.module.init;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.function.Supplier;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import ro.mastermindsrobotics.dashboard.DashboardServer;
+import ro.mastermindsrobotics.dashboard.TelemetryMenu;
 
 /**
  * <strong>ModuleInitContext</strong> provides dynamic access to robot dependencies such as
@@ -30,24 +32,24 @@ import ro.mastermindsrobotics.dashboard.DashboardServer;
 public class ModuleInitContext {
 
     private final Supplier<HardwareMap> hardwareMap;
-    private final Supplier<Telemetry> telemetry;
+    private final Supplier<TelemetryMenu> telemetryMenu;
 
     private ModuleInitContext(Builder builder) {
         this.hardwareMap = builder.hardwareMap;
-        this.telemetry = builder.telemetry;
+        this.telemetryMenu = builder.telemetryMenu;
     }
 
     public Supplier<HardwareMap> getHardwareMap() {
         return hardwareMap;
     }
 
-    public Supplier<Telemetry> getTelemetry() {
-        return telemetry;
+    public Supplier<TelemetryMenu> getTelemetryMenu() {
+        return telemetryMenu != null ? telemetryMenu : () -> TelemetryMenu.getInstance(null);
     }
 
     public static class Builder {
         private Supplier<HardwareMap> hardwareMap;
-        private Supplier<Telemetry> telemetry;
+        private Supplier<TelemetryMenu> telemetryMenu;
 
         /**
          * Sets the HardwareMap dependency.
@@ -60,8 +62,8 @@ public class ModuleInitContext {
         /**
          * Sets the Telemetry dependency.
          */
-        public Builder setTelemetry(Supplier<Telemetry> telemetrySupplier) {
-            this.telemetry = telemetrySupplier;
+        public Builder setTelemetry(Supplier<TelemetryMenu> telemetryMenuSupplier) {
+            this.telemetryMenu = telemetryMenuSupplier;
             return this;
         }
 

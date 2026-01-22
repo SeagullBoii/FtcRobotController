@@ -7,9 +7,7 @@ import ro.mastermindsrobotics.dashboard.interfaces.DashboardModule;
 
 public class ModuleUtil {
     public static void initModules(List<AbstractDashboardModule> modules, ModuleInitContext context) {
-        for (DashboardModule module : modules) {
+        for (DashboardModule module : modules)
             ModuleRegistry.injectAll(module, context);
-            module.readData();
-        }
     }
 }

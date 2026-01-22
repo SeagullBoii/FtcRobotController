@@ -6,6 +6,8 @@ import java.util.function.BiConsumer;
 
 import ro.mastermindsrobotics.dashboard.interfaces.DashboardModule;
 import ro.mastermindsrobotics.dashboard.interfaces.HardwareMapUser;
+import ro.mastermindsrobotics.dashboard.interfaces.TelemetryMenuUser;
+import ro.mastermindsrobotics.dashboard.module.core.TelemetryModule;
 
 public class ModuleRegistry {
     private static final Map<Class<?>, BiConsumer<DashboardModule, ModuleInitContext>> registry = new HashMap<>();
@@ -13,6 +15,9 @@ public class ModuleRegistry {
     static {
         registry.put(HardwareMapUser.class,
                 (module, ctx) -> ((HardwareMapUser) module).setHardwareMap(ctx.getHardwareMap()));
+        registry.put(TelemetryMenuUser.class,
+                (module, ctx) ->
+                        ((TelemetryModule) module).setTelemetryMenu(ctx.getTelemetryMenu()));
     }
 
     public static void injectAll(DashboardModule module, ModuleInitContext ctx) {

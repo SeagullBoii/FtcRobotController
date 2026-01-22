@@ -1,5 +1,6 @@
 package ro.mastermindsrobotics.dashboard.module;
 
+import fi.iki.elonen.NanoHTTPD;
 import ro.mastermindsrobotics.dashboard.interfaces.DashboardModule;
 
 public abstract class AbstractDashboardModule implements DashboardModule {
@@ -16,7 +17,7 @@ public abstract class AbstractDashboardModule implements DashboardModule {
     }
 
     @Override
-    public void readData() {
+    public void onRequest(NanoHTTPD.IHTTPSession session) {
     }
 
     @Override
