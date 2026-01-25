@@ -67,13 +67,6 @@ body {
     font-size: 16px;
 }
 
-.main-container {
-    display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    height: calc(100vh - 60px);
-    gap: 0;
-}
-
 .left-panel {
     background: #3a2d47;
     padding: 20px;
@@ -154,10 +147,6 @@ body {
     font-size: 16px;
 }
 
-.arena-container {
-    margin: 20px 0;
-}
-
 .arena-label {
     font-size: 20px;
     margin-bottom: 10px;
@@ -165,8 +154,8 @@ body {
 }
 
 .arena-image {
-    width: 600px;
-    height: 400px;
+    width: 500px;
+    height: 500px;
     background: #3e2d40;
     border: 2px solid #3e2d40;
     border-radius: 8px;
@@ -175,6 +164,7 @@ body {
 }
 
 .coordinate-display {
+    display: none;
     position: absolute;
     top: 10px;
     left: 10px;
@@ -194,9 +184,18 @@ body {
 
 
 .arena-data {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-top: 15px;
-    font-size: 14px;
+    font-size: 1.15rem;
     line-height: 1.6;
+}
+
+.right-data {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
 }
 
 .configurables {
@@ -263,7 +262,8 @@ body {
     font-family: 'Courier New', monospace;
     background: #241c27;
     color: white;
-    overflow: hidden;
+    overflow: auto;
+    overflow-x: hidden;
 }
 
 .header {
@@ -276,7 +276,7 @@ body {
 
 .main-container {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-columns: 1.5fr 2fr 1.5fr;
     height: calc(100vh - 60px);
     gap: 0;
 }
@@ -311,8 +311,6 @@ body {
 }
 
 .arena-image {
-    width: 600px;
-    height: 400px;
     background: #3e2d40;
     border: 2px solid #3e2d40;
     border-radius: 8px;
@@ -394,11 +392,6 @@ body {
     background: #6e5d70;
 }
 
-#arena-image {
-    width: 300px;
-    height: 300px;
-}
-
 .section-title {
     font-size: 24px;
     margin-bottom: 20px;
@@ -463,3 +456,7 @@ body {
     color: white;
     padding: 12px;
 }
+
+
+
+

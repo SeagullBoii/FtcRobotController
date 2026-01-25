@@ -68,8 +68,6 @@ modal.addEventListener("click", (e) => {
   }
 });
 
-// Example: Update values dynamically
-// You can call these functions to update the dashboard
 function updateConnectionStatus(status) {
   document.getElementById("connection-status").textContent = status;
 }
@@ -86,23 +84,23 @@ function updateTelemetry(key, value) {
 }
 
 function updateArenaData(data) {
-  if (data.offsetX !== undefined)
-    document.getElementById("offset-x").textContent =
-      `offsetX: ${data.offsetX}"`;
-  if (data.offsetY !== undefined)
-    document.getElementById("offset-y").textContent =
-      `offsetY: ${data.offsetY}"`;
-  if (data.mouseX !== undefined)
-    document.getElementById("mouse-x").textContent = `mouseX: ${data.mouseX}"`;
-  if (data.mouseY !== undefined)
-    document.getElementById("mouse-y").textContent = `mouseY: ${data.mouseY}"`;
-  if (data.heading !== undefined)
-    document.getElementById("heading").textContent =
-      `heading: ${data.heading}°`;
-  if (data.flipX !== undefined)
-    document.getElementById("flip-x").textContent = `flipX: ${data.flipX}`;
-  if (data.flipY !== undefined)
-    document.getElementById("flip-y").textContent = `flipY: ${data.flipY}`;
+  if (data.startOffsetX !== undefined)
+    document.getElementById("offset-x").textContent = `startOffsetX: ${data.startOffsetX}"`;
+  
+  if (data.startOffsetY !== undefined)
+    document.getElementById("offset-y").textContent = `startOffsetY: ${data.startOffsetY}"`;
+  
+  if (data.startHeading !== undefined)
+    document.getElementById("start-heading").textContent = `startHeading: ${data.startHeading}"`;
+  
+  if (data.currentX !== undefined)
+    document.getElementById("current-x").textContent = `currentX: ${data.currentX}"`;
+  
+  if (data.currentY !== undefined)
+    document.getElementById("current-y").textContent = `currentY: ${data.currentY}"`;
+  
+  if (data.currentHeading !== undefined)
+    document.getElementById("current-heading").textContent = `currentHeading: ${data.currentHeading}°`;
 }
 
 function updateTestVar(value) {
@@ -265,6 +263,7 @@ classSelect.addEventListener("change", () => {
 });
 
 arenaImage.addEventListener('mousemove', (e) => {
+    coordDisplay.style.display = "initial";
     const rect = arenaImage.getBoundingClientRect();
 
     const x = e.clientX - rect.left;
@@ -275,17 +274,12 @@ arenaImage.addEventListener('mousemove', (e) => {
     const xInches = (x / rect.width) * ARENA_WIDTH_INCHES;
     const yInches = (flippedY / rect.height) * ARENA_HEIGHT_INCHES;
     
-    coordDisplay.textContent = `X: ${x.toFixed(0)}, Y: ${flippedY.toFixed(0)}`;
-
-    document.getElementById("offset-x").textContent = `offsetX: ${xInches.toFixed(2)}"`;
-    document.getElementById("offset-y").textContent = `offsetY: ${yInches.toFixed(2)}"`;
+    coordDisplay.textContent = `X: ${xInches.toFixed(2)}", Y: ${yInches.toFixed(2)}"`;
 });
 
 arenaImage.addEventListener('mouseleave', () => {
     coordDisplay.textContent = 'X: 0, Y: 0';
-
-    document.getElementById("offset-x").textContent = `offsetX: 0.00"`;
-    document.getElementById("offset-y").textContent = `offsetY: 0.00"`;
+    coordDisplay.style.display = "none";
 });
 
 setInterval(updateBatteryVoltage, 1000);

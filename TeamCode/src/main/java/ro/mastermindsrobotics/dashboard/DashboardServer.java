@@ -152,6 +152,9 @@
             if (uri.startsWith("/api/"))
                 return serveApiRoute(uri, session);
 
+            if (uri.startsWith("/images/"))
+                return serveAsset("dashboard" + uri, "image/png");
+
             switch (uri) {
                 case "/":
                 case "/index.html":
