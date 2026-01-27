@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 
 import ro.mastermindsrobotics.dashboard.TelemetryMenu;
 import ro.mastermindsrobotics.dashboard.annotation.Configurable;
@@ -23,6 +25,7 @@ public class TestOpMode extends LinearOpMode {
             menu.addData("fututi mortii matii", 10);
             if (gamepad1.left_bumper)
                 menu.addData("bagpula", 123);
+
             menu.update();
         }
     }

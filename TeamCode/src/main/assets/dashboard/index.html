@@ -9,25 +9,47 @@
 </head>
 <body>
 <div class="header">
-    <div id="connection-status">Connected</div>
-    <div class="battery-container">
-        <div id="battery-voltage">15V</div>
-        <div class="battery">
-            <div class="battery-fill" id="battery-fill"></div>
+    <div class="left">
+        <div id="connection-status">Connected</div>
+    </div>
+
+    <div class="middle">
+        <div class="battery-container">
+            <div id="battery-voltage">15V</div>
+            <div class="battery">
+                <div class="battery-fill" id="battery-fill"></div>
+            </div>
         </div>
     </div>
-    <div id="ping-time">3ms</div>
+
+    <div class="right">
+        <div id="ping-time">3ms</div>
+        <div class="menu">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                <path d="M320 208C289.1 208 264 182.9 264 152C264 121.1 289.1 96 320 96C350.9 96 376 121.1 376 152C376 182.9 350.9 208 320 208zM320 432C350.9 432 376 457.1 376 488C376 518.9 350.9 544 320 544C289.1 544 264 518.9 264 488C264 457.1 289.1 432 320 432zM376 320C376 350.9 350.9 376 320 376C289.1 376 264 350.9 264 320C264 289.1 289.1 264 320 264C350.9 264 376 289.1 376 320z"/>
+            </svg>
+            <div class="dropdown">
+                <div class="measurement">
+                    <label for="units">Measurement Unit:</label>
+                    <select id="units" name="units">
+                        <option value="inches">Inches</option>
+                        <option value="centimeters">Centimeters</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="main-container">
     <div class="left-panel">
-        <div class="section-title">Select an OpMode</div>
+        <div class="section-title opmode-title">Select an OpMode</div>
         <div class="mode-selector">
             <button class="mode-button" id="auto-btn">
                 <span>Auto</span>
                 <span class="arrow">▼</span>
             </button>
-            <button class="init-button">INIT</button>
+            <button class="state-button">INIT</button>
             <button class="mode-button" id="teleop-btn">
                 <span>Teleop</span>
                 <span class="arrow">▼</span>
@@ -43,20 +65,23 @@
         <div class="arena-container">
             <div class="arena-label">Arena</div>
             <div alt="Arena Map" class="arena-image" id="arena-image">
-                <img src="../images/arena.png" alt="">
+                <img src="/images/arena.png" alt="">
                 <div class="coordinate-display" id="coord-display">X: 0, Y: 0</div>
+                <div class="robot-shape">
+                    <div class="directionArrow"></div>
+                </div>
             </div>
             <div class="arena-data">
                 <div class="left-data">
-                    <div id="offset-x">startOffsetX: -32.00"</div>
-                    <div id="offset-y">startOffsetY: 32.00"</div>
-                    <div id="start-heading">startHeading: 0.00°"</div>
+                    <div id="start-x">startX: --</div>
+                    <div id="start-y">startY: --</div>
+                    <div id="start-heading">startHeading: --</div>
                 </div>
 
                 <div class="right-data">
-                    <div id="current-x">currentX: 31.04"</div>
-                    <div id="current-y">currentY: 50.12"</div>
-                    <div id="current-heading">currentHeading: 172.61°</div>
+                    <div id="current-x">currentX: --</div>
+                    <div id="current-y">currentY: --</div>
+                    <div id="current-heading">currentHeading: --</div>
                 </div>
             </div>
         </div>
@@ -81,10 +106,12 @@
 
 <div class="modal" id="mode-modal">
     <div class="modal-content">
-        <div class="modal-title" id="modal-title">Select Mode</div>
-        <button class="modal-option" data-mode="autonomous-1">Autonomous Mode 1</button>
-        <button class="modal-option" data-mode="autonomous-2">Autonomous Mode 2</button>
-        <button class="modal-option" data-mode="autonomous-3">Autonomous Mode 3</button>
+        <div class="teleop-modal">
+            <div class="modal-title" id="modal-title">Select TeleOp Mode</div>
+        </div>
+        <div class="auto-modal">
+            <div class="modal-title" id="modal-title">Select Auto Mode</div>
+        </div>
     </div>
 </div>
 </body>

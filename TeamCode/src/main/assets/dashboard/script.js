@@ -1,17 +1,29 @@
 const API_BASE = window.location.origin;
 
-// Modal handling
 const modal = document.getElementById("mode-modal");
 const autoBtn = document.getElementById("auto-btn");
 const teleopBtn = document.getElementById("teleop-btn");
-const modalTitle = document.getElementById("modal-title");
-const modalOptions = document.querySelectorAll(".modal-option");
 const classSelect = document.getElementById("class-select");
 const arenaImage = document.getElementById('arena-image');
 const coordDisplay = document.getElementById('coord-display');
+const autoModal = document.querySelector(".auto-modal");
+const teleopModal = document.querySelector(".teleop-modal");
+const stateButton = document.querySelector(".state-button");
+const unitButton = document.querySelector(".unit-button");
 
 const ARENA_WIDTH_INCHES = 72;
 const ARENA_HEIGHT_INCHES = 72;
+
+const robotDimensions = {
+  width: 12,
+  length: 12
+}
+
+const data = {
+  currentX: 36,
+  currentY: 36,
+  currentHeading: 0
+}
 
 const classes = [
     {
@@ -38,35 +50,83 @@ const classes = [
     }
 ];
 
-let currentModeType = "";
+const modes = {
+  teleop: ["test", "sigma"],
+  auto: ["Auto Far Rosu", "Auto Close Rosu", "Auto Far Albastru", "Auto Close Albastru"]
+}
 
-autoBtn.addEventListener("click", () => {
-  currentModeType = "auto";
-  modalTitle.textContent = "Select Auto Mode";
-  modal.style.display = "flex";
-});
+let currentModeType = "", currentMode = "";
+let opmodeTitle = document.querySelector(".opmode-title");
+let currentState = 0;
 
-teleopBtn.addEventListener("click", () => {
-  currentModeType = "teleop";
-  modalTitle.textContent = "Select Teleop Mode";
-  modal.style.display = "flex";
-});
+stateButton.disabled = true;
 
-modalOptions.forEach((option) => {
-  option.addEventListener("click", (e) => {
-    modalOptions.forEach((opt) => opt.classList.remove("selected"));
-    e.target.classList.add("selected");
-    setTimeout(() => {
-      modal.style.display = "none";
-    }, 300);
+function setState(state) {
+  const button = document.querySelector(".state-button");
+
+  switch (state) {
+      case 0:
+        button.textContent = "INIT";
+        currentState = 0;
+        break;
+      case 1:
+        button.textContent = "START";
+        currentState = 1;
+        break;
+      case 2:
+        button.textContent = "STOP";
+        currentState = 2;
+        break;
+    }
+}
+
+function toggleState() {
+  stateButton.addEventListener("click", () => {
+    if (!checkAvailable()) return;
+
+    currentState = (currentState + 1) % 3;
+    setState(currentState);
   });
-});
 
-modal.addEventListener("click", (e) => {
-  if (e.target === modal) {
-    modal.style.display = "none";
+}
+
+function checkAvailable() {
+  const options = document.querySelectorAll(".modal-option");
+
+  for(const option of options) {
+    if(option.classList.contains("selected")) {
+      return true;
+    }
   }
-});
+
+  return false;
+}
+
+function sendDataToModal() {
+  const autoModes = modes.auto;
+  const autoModal = document.querySelector(".auto-modal");
+
+  autoModes.forEach((mode) => {
+    const autoOption = document.createElement("button");
+    
+    autoOption.classList.add("modal-option");
+    autoOption.textContent = mode;
+
+    autoModal.appendChild(autoOption);
+  });
+
+  const teleopModes = modes.teleop;
+  const teleopModal = document.querySelector(".teleop-modal");
+
+  teleopModes.forEach((mode) => {
+    const teleopOption = document.createElement("button");
+
+    teleopOption.classList.add("modal-option");
+    teleopOption.textContent = mode;
+
+    teleopModal.appendChild(teleopOption);
+  });
+}
 
 function updateConnectionStatus(status) {
   document.getElementById("connection-status").textContent = status;
@@ -84,11 +144,11 @@ function updateTelemetry(key, value) {
 }
 
 function updateArenaData(data) {
-  if (data.startOffsetX !== undefined)
-    document.getElementById("offset-x").textContent = `startOffsetX: ${data.startOffsetX}"`;
+  if (data.startX !== undefined)
+    document.getElementById("start-x").textContent = `startX: ${data.startX}"`;
   
-  if (data.startOffsetY !== undefined)
-    document.getElementById("offset-y").textContent = `startOffsetY: ${data.startOffsetY}"`;
+  if (data.startY !== undefined)
+    document.getElementById("start-y").textContent = `startY: ${data.startY}"`;
   
   if (data.startHeading !== undefined)
     document.getElementById("start-heading").textContent = `startHeading: ${data.startHeading}"`;
@@ -165,7 +225,7 @@ async function fetchTelemetry() {
 
 function renderTelemetry(telemetry) {
   const container = document.getElementById('telemetry-content');
-  container.innerHTML = '';
+  container.textContent = '';
 
   for (const [key, entry] of Object.entries(telemetry)) {
     const p = document.createElement('p');
@@ -242,12 +302,78 @@ function createVariables() {
     });
 }
 
-function updatePingTime(time) { document.getElementById("ping-time").textContent = time; }
+function updatePingTime(time) { 
+  document.getElementById("ping-time").textContent = time; 
+}
 
-updateBatteryVoltage();
-fetchTelemetry();
-sendPing();
-createOptions();
+function inchesToPixelsX(inches) {
+  return (inches / ARENA_WIDTH_INCHES) * arenaImage.clientWidth;
+}
+
+function inchesToPixelsY(inches) {
+  return (inches / ARENA_HEIGHT_INCHES) * arenaImage.clientHeight;
+}
+
+function inchesToCentimeters(inches) {
+  return inches * 2.54;
+}
+
+
+function createRobotShape() {
+  const robotShape = document.querySelector(".robot-shape");
+
+  const pxWidth  = inchesToPixelsX(robotDimensions.width);
+  const pxLength = inchesToPixelsY(robotDimensions.length);
+
+  const pxX = inchesToPixelsX(data.currentX);
+  const pxY = inchesToPixelsY(data.currentY);
+
+  robotShape.style.width  = `${pxWidth}px`;
+  robotShape.style.height = `${pxLength}px`;
+
+  robotShape.style.left = `${pxX - pxWidth / 2}px`;
+  robotShape.style.bottom = `${pxY - pxLength / 2}px`;
+
+
+  robotShape.style.transform = `rotate(${data.currentHeading}deg)`;
+
+  arenaImage.appendChild(robotShape);
+}
+
+
+createRobotShape();
+
+autoBtn.addEventListener("click", () => {
+  currentModeType = "auto";
+  autoModal.style.display = "block";
+  teleopModal.style.display = "none";
+  modal.style.display = "flex";
+});
+
+teleopBtn.addEventListener("click", () => {
+  currentModeType = "teleop";
+  teleopModal.style.display = "block";
+  autoModal.style.display = "none";
+  modal.style.display = "flex";
+});
+
+modal.addEventListener("click", (e) => {
+  if (e.target.classList.contains("modal-option")) {
+
+    document.querySelectorAll(".modal-option").forEach((opt) => opt.classList.remove("selected"));
+    e.target.classList.add("selected");
+    
+    currentMode = e.target.textContent;
+    opmodeTitle.textContent = currentMode;
+
+    stateButton.disabled = false;
+    modal.style.display = "none";
+  }
+  
+  if (e.target === modal) {
+    modal.style.display = "none";
+  }
+});
 
 classSelect.addEventListener("change", () => {
     const classVars = document.querySelectorAll(".classVars");
@@ -281,6 +407,15 @@ arenaImage.addEventListener('mouseleave', () => {
     coordDisplay.textContent = 'X: 0, Y: 0';
     coordDisplay.style.display = "none";
 });
+
+sendDataToModal();
+updateBatteryVoltage();
+fetchTelemetry();
+sendPing();
+createOptions();
+updateArenaData(data);
+setState(currentState);
+toggleState();
 
 setInterval(updateBatteryVoltage, 1000);
 setInterval(fetchTelemetry, 100);
