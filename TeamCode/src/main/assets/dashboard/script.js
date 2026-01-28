@@ -10,6 +10,8 @@ const autoModal = document.querySelector(".auto-modal");
 const teleopModal = document.querySelector(".teleop-modal");
 const stateButton = document.querySelector(".state-button");
 const unitButton = document.querySelector(".unit-button");
+const unitsSelect = document.getElementById("units");
+const refreshButton = document.querySelector(".refresh-button");
 
 const ARENA_WIDTH_INCHES = 72;
 const ARENA_HEIGHT_INCHES = 72;
@@ -58,6 +60,7 @@ const modes = {
 let currentModeType = "", currentMode = "";
 let opmodeTitle = document.querySelector(".opmode-title");
 let currentState = 0;
+let currentUnit = "inches";
 
 stateButton.disabled = true;
 
@@ -102,6 +105,16 @@ function checkAvailable() {
   return false;
 }
 
+function convertValue(value, fromUnit, toUnit) {
+  if (fromUnit === toUnit) return value;
+  if (fromUnit === "inches" && toUnit === "centimeters") return value * 2.54;
+  if (fromUnit === "centimeters" && toUnit === "inches") return value / 2.54;
+}
+
+function getUnitSymbol(unit) {
+  return unit === "inches" ? '"' : "cm";
+}
+
 function sendDataToModal() {
   const autoModes = modes.auto;
   const autoModal = document.querySelector(".auto-modal");
@@ -144,23 +157,33 @@ function updateTelemetry(key, value) {
 }
 
 function updateArenaData(data) {
-  if (data.startX !== undefined)
-    document.getElementById("start-x").textContent = `startX: ${data.startX}"`;
+  const unit = getUnitSymbol(currentUnit);
   
-  if (data.startY !== undefined)
-    document.getElementById("start-y").textContent = `startY: ${data.startY}"`;
+  if (data.startX !== undefined) {
+    const convertedX = convertValue(data.startX, "inches", currentUnit);
+    document.getElementById("start-x").textContent = `startX: ${convertedX.toFixed(2)}${unit}`;
+  }
+  
+  if (data.startY !== undefined) {
+    const convertedY = convertValue(data.startY, "inches", currentUnit);
+    document.getElementById("start-y").textContent = `startY: ${convertedY.toFixed(2)}${unit}`;
+  }
   
   if (data.startHeading !== undefined)
-    document.getElementById("start-heading").textContent = `startHeading: ${data.startHeading}"`;
+    document.getElementById("start-heading").textContent = `startHeading: ${data.startHeading.toFixed(2)}°`;
   
-  if (data.currentX !== undefined)
-    document.getElementById("current-x").textContent = `currentX: ${data.currentX}"`;
+  if (data.currentX !== undefined) {
+    const convertedX = convertValue(data.currentX, "inches", currentUnit);
+    document.getElementById("current-x").textContent = `currentX: ${convertedX.toFixed(2)}${unit}`;
+  }
   
-  if (data.currentY !== undefined)
-    document.getElementById("current-y").textContent = `currentY: ${data.currentY}"`;
+  if (data.currentY !== undefined) {
+    const convertedY = convertValue(data.currentY, "inches", currentUnit);
+    document.getElementById("current-y").textContent = `currentY: ${convertedY.toFixed(2)}${unit}`;
+  }
   
   if (data.currentHeading !== undefined)
-    document.getElementById("current-heading").textContent = `currentHeading: ${data.currentHeading}°`;
+    document.getElementById("current-heading").textContent = `currentHeading: ${data.currentHeading.toFixed(2)}°`;
 }
 
 function updateTestVar(value) {
@@ -340,9 +363,6 @@ function createRobotShape() {
   arenaImage.appendChild(robotShape);
 }
 
-
-createRobotShape();
-
 autoBtn.addEventListener("click", () => {
   currentModeType = "auto";
   autoModal.style.display = "block";
@@ -362,8 +382,15 @@ modal.addEventListener("click", (e) => {
 
     document.querySelectorAll(".modal-option").forEach((opt) => opt.classList.remove("selected"));
     e.target.classList.add("selected");
+
+    const newMode = e.target.textContent;
     
-    currentMode = e.target.textContent;
+    if (currentMode != newMode) {
+      currentState = 0;
+      setState(0);
+    }
+
+    currentMode = newMode;
     opmodeTitle.textContent = currentMode;
 
     stateButton.disabled = false;
@@ -372,6 +399,12 @@ modal.addEventListener("click", (e) => {
   
   if (e.target === modal) {
     modal.style.display = "none";
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && modal.style.display === 'flex') {
+    modal.style.display = 'none';
   }
 });
 
@@ -400,12 +433,26 @@ arenaImage.addEventListener('mousemove', (e) => {
     const xInches = (x / rect.width) * ARENA_WIDTH_INCHES;
     const yInches = (flippedY / rect.height) * ARENA_HEIGHT_INCHES;
     
-    coordDisplay.textContent = `X: ${xInches.toFixed(2)}", Y: ${yInches.toFixed(2)}"`;
+    const xConverted = convertValue(xInches, "inches", currentUnit);
+    const yConverted = convertValue(yInches, "inches", currentUnit);
+    const unit = getUnitSymbol(currentUnit);
+    
+    coordDisplay.textContent = `X: ${xConverted.toFixed(2)}${unit}, Y: ${yConverted.toFixed(2)}${unit}`;
+});
+
+unitsSelect.addEventListener("change", (e) => {
+    currentUnit = e.target.value;
+    updateArenaData(data);
+    createRobotShape();
 });
 
 arenaImage.addEventListener('mouseleave', () => {
     coordDisplay.textContent = 'X: 0, Y: 0';
     coordDisplay.style.display = "none";
+});
+
+refreshButton.addEventListener("click", () => {
+
 });
 
 sendDataToModal();
@@ -416,6 +463,7 @@ createOptions();
 updateArenaData(data);
 setState(currentState);
 toggleState();
+createRobotShape();
 
 setInterval(updateBatteryVoltage, 1000);
 setInterval(fetchTelemetry, 100);

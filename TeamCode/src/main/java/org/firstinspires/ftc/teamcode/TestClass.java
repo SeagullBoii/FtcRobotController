@@ -7,7 +7,8 @@ import ro.mastermindsrobotics.dashboard.TelemetryMenu;
 import ro.mastermindsrobotics.dashboard.annotation.Configurable;
 
 @Configurable
-@TeleOp(name = "bsgpila2", group = "group")public class TestClass extends LinearOpMode {
+@TeleOp(name = "bsgpila2", group = "group"
+)public class TestClass extends LinearOpMode {
     public static int testNum1 = 15;
     public static double testNum2 = 20;
 

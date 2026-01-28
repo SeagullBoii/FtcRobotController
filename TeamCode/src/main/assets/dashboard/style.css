@@ -1,17 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Ramabhadra&display=swap');
 :root {
-    /* Primary Backgrounds */
-    --bg-dark: #241c27;       /* Main body background */
-    --bg-panel: #3a2d47;      /* Original panel color */
-    --bg-surface: #3e2d40;    /* Header and section containers */
-    
-    /* Interactive Elements */
-    --btn-primary: #4e3d50;   /* Hover states and buttons */
-    --btn-accent: #e8d4ff;    /* Circular state buttons */
-    --border-dim: #4a3557;    /* Subtle panel borders */
-    --border-bright: #6e5d70; /* Input and select borders */
-    
-    /* Text & Status */
+    --bg-dark: #241c27;
+    --bg-panel: #3a2d47;
+    --bg-surface: #3e2d40;
+
+    --btn-primary: #4e3d50;
+    --btn-accent: #e8d4ff;
+    --border-dim: #4a3557;    
+    --border-bright: #6e5d70; 
+
     --text-main: #ffffff;
     --text-muted: #b7a9c4;
     --status-disabled: #7e6d80;
@@ -25,13 +22,19 @@
 }
 
 body {
-    background: #3a2d47;
-    color: white;
+    background: var(--bg-dark);
+    color: var(--text-main);
     overflow: hidden;
 }
 
+input {
+    background: var(--bg-surface);
+    border: 2px solid var(--border-bright);
+    color: var(--text-main);  
+}
+
 .header {
-    background: #4a3557;
+    background: var(--bg-surface);
     padding: 15px 20px;
     display: flex;
     justify-content: space-between;
@@ -83,32 +86,6 @@ body {
 
 #ping-time {
     font-size: 16px;
-}
-
-.left-panel {
-    background: #3a2d47;
-    padding: 20px;
-    border-right: 1px solid #4a3557;
-}
-
-.center-panel {
-    background: #3a2d47;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.right-panel {
-    background: #3a2d47;
-    padding: 20px;
-    border-left: 1px solid #4a3557;
-}
-
-.section-title {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
 }
 
 .mode-selector {
@@ -169,12 +146,6 @@ body {
 .telemetry-item {
     margin: 10px 0;
     font-size: 16px;
-}
-
-.arena-label {
-    font-size: 20px;
-    margin-bottom: 10px;
-    text-align: center;
 }
 
 .arena-image {
@@ -300,10 +271,13 @@ body {
 
 .header .right {
     display: flex;
+    align-items: center;
     gap: 2rem;
 }
 
 .header .right .menu {
+    display: flex;
+    align-items: center;
     cursor: pointer;
     fill: #fff;
 }
@@ -316,18 +290,20 @@ body {
 .dropdown {
     z-index: 20;
     position: absolute;
-    min-width: 150px;
-    padding: 0.75rem 1rem;
-    top: 50px;
+    min-width: 200px;
+    padding: 1rem;
+    top: 30px;
     right: 0;
-    background-color: var(--bg-surface);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border-bright);
     border-radius: 0.5rem;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
-    transition: all 0.3s ease
+    transition: all 0.3s ease;
+
+    background: var(--bg-surface);
+    border: 2px solid var(--border-bright);
+    color: var(--text-main);
 }
 
 .header .right .menu:hover .dropdown {
@@ -344,13 +320,14 @@ body {
 }
 
 .left-panel {
-    background: #241c27;
     padding: 20px;
-    border-right: 1px solid #3e2d40;
+    background: var(--bg-dark);
+    border: 1px solid var(--bg-surface);
 }
 
 .center-panel {
-    background: #241c27;
+    background: var(--bg-dark);
+    border: 1px solid var(--bg-surface);
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -358,9 +335,9 @@ body {
 }
 
 .right-panel {
-    background: #241c27;
+    background: var(--bg-dark);
+    border: 1px solid var(--bg-surface);
     padding: 20px;
-    border-left: 1px solid #3e2d40;
 }
 
 .battery {
@@ -458,7 +435,7 @@ body {
     font-size: 24px;
     margin-bottom: 20px;
     text-align: center;
-    background: #3e2d40;
+    background: var(--bg-surface);
     padding: 10px;
     border-radius: 5px;
 }
@@ -467,7 +444,7 @@ body {
     font-size: 20px;
     margin-bottom: 10px;
     text-align: center;
-    background: #3e2d40;
+    background: var(--bg-surface);
     padding: 8px;
     border-radius: 5px;
 }
@@ -494,9 +471,6 @@ body {
 #class-select {
     width: 100%;
     padding: 12px 40px 12px 16px;
-    background: #3e2d40;
-    color: white;
-    border: 2px solid #6e5d70;
     border-radius: 8px;
     font-size: 16px;
     cursor: pointer;
@@ -505,6 +479,10 @@ body {
     -moz-appearance: none;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     outline: none;
+
+    background: var(--bg-surface);
+    border: 2px solid var(--border-bright);
+    color: var(--text-main);
 }
 
 #class-select:hover,
@@ -585,28 +563,46 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-
-body {
-    background: var(--bg-dark);
-    color: var(--text-main);
-}
-
-.header, .section-title, .arena-label {
-    background: var(--bg-surface);
-}
-
-.left-panel, .center-panel, .right-panel {
-    background: var(--bg-dark);
-    border-color: var(--bg-surface);
-}
-
-input, #class-select,
-.dropdown {
-    background: var(--bg-surface);
-    border: 2px solid var(--border-bright);
-    color: var(--text-main);
-}
-
 input:hover {
-    border-color: #8c6fa0; /* You could also turn this into --btn-hover */
+    border-color: #8c6fa0;
+}
+
+.header .right .menu {
+    cursor: pointer;
+    fill: #fff;
+    position: relative;
+}
+
+.measurement {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.measurement label {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+#units {
+    width: 100%;
+    padding: 8px 32px 8px 12px;
+    background: #3e2d40;
+    color: white;
+    border: 2px solid #6e5d70;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+    font-family: inherit;
+}
+
+#units:hover,
+#units:focus {
+    border-color: #7e6d80;
+    box-shadow: 0 4px 12px rgba(110, 93, 112, 0.3);
 }
