@@ -69,8 +69,9 @@ public interface DashboardModule {
      * <p>This method should return quickly and must not block.</p>
      *
      * @param session the HTTP request session associated with the API call
+     * @return
      */
-    void onRequest(NanoHTTPD.IHTTPSession session);
+    NanoHTTPD.Response onRequest(NanoHTTPD.IHTTPSession session);
 
     /**
      * Called once after the server has finished initializing and all

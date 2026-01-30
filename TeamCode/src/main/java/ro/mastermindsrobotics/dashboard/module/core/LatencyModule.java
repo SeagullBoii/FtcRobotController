@@ -8,9 +8,6 @@ import ro.mastermindsrobotics.dashboard.module.AbstractDashboardModule;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * Measures latency between dashboard client and robot.
- */
 public class LatencyModule extends AbstractDashboardModule {
     private final AtomicLong lastLatency = new AtomicLong(-1);
 
@@ -20,14 +17,29 @@ public class LatencyModule extends AbstractDashboardModule {
     }
 
     @Override
-    public void onRequest(NanoHTTPD.IHTTPSession session) {
+    public NanoHTTPD.Response onRequest(NanoHTTPD.IHTTPSession session) {
         try {
-            String ts = session.getParms().get("ts");
-            if (ts != null) {
-                lastLatency.set(Long.parseLong(ts));
-            }
+            String tsParam = session.getParms().get("ts");
+            long clientTs = tsParam != null ? Long.parseLong(tsParam) : -1;
+
+            long serverTs = System.currentTimeMillis();
+            lastLatency.set(serverTs - clientTs);
+
+            String json = "{ \"serverTime\": " + serverTs + " }";
+
+            return NanoHTTPD.newFixedLengthResponse(
+                    NanoHTTPD.Response.Status.OK,
+                    "application/json",
+                    json
+            );
+
         } catch (Exception e) {
-            Log.e("LatencyModule", "Failed request: ", e);
+            Log.e("LatencyModule", "Failed request", e);
+            return NanoHTTPD.newFixedLengthResponse(
+                    NanoHTTPD.Response.Status.BAD_REQUEST,
+                    "text/plain",
+                    "Invalid timestamp"
+            );
         }
     }
 

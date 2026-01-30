@@ -263,19 +263,19 @@ function renderTelemetry(telemetry) {
 
 async function sendPing() {
     const startTime = Date.now();
-    
+
     try {
         const response = await fetch(`/api/latency?ts=${startTime}`);
         const data = await response.json();
-        
+
         const rtt = Date.now() - startTime;
-        
-        console.log("Actual Latency (ms):", rtt);
-        updatePingTime(rtt + " ms");
+
+        updatePingTime(`${rtt} ms`);
     } catch (e) {
         console.error("Ping failed", e);
     }
 }
+
 
 function createOptions() {
     const defaultOption = document.createElement("option");
@@ -455,6 +455,73 @@ refreshButton.addEventListener("click", () => {
 
 });
 
+async function getAllClasses() {
+    const response = await fetch('/api/configurableVariables');
+    const classes = await response.json();
+    return classes;
+}
+
+async function getClass(className) {
+    const response = await fetch(`/api/configurableVariables?class=${encodeURIComponent(className)}`);
+    
+    if (!response.ok) {
+        throw new Error(`Class not found: ${className}`);
+    }
+    
+    const classes = await response.json();
+    return classes[0];
+}
+async function getAllClasses() {
+    const response = await fetch('/api/configurableVariables');
+    
+    if (!response.ok) {
+        throw new Error(`Failed to fetch classes: ${response.status}`);
+    }
+    
+    const classes = await response.json();
+    return classes;
+}
+
+async function getClass(className) {
+    const response = await fetch(`/api/configurableVariables?class=${encodeURIComponent(className)}`);
+    
+    if (!response.ok) {
+        throw new Error(`Class not found: ${className}`);
+    }
+    
+    const classes = await response.json();
+    return classes[0];
+}
+addEventListener("DOMContentLoaded", async () => {
+    try {
+        console.log("Fetching from /api/configurableVariables");
+        
+        const response = await fetch('/api/configurableVariables');
+        console.log("Response status:", response.status);
+        console.log("Response ok:", response.ok);
+        console.log("Response type:", response.type);
+        
+        const text = await response.text();
+        console.log("Raw response text:", text);
+        console.log("Text length:", text.length);
+        
+        if (!text || text === "null" || text.trim() === "") {
+            console.error("Empty or null response");
+            return;
+        }
+        
+        const fetchedClasses = JSON.parse(text);
+        console.log("Parsed classes:", fetchedClasses);
+        
+        if (Array.isArray(fetchedClasses) && fetchedClasses.length > 0) {
+            classes.length = 0; 
+            Array.prototype.push.apply(classes, fetchedClasses);
+            console.log(`Successfully loaded ${classes.length} classes`);
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+});
 sendDataToModal();
 updateBatteryVoltage();
 fetchTelemetry();

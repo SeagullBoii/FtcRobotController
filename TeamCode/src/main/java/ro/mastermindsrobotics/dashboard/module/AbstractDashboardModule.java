@@ -17,7 +17,8 @@ public abstract class AbstractDashboardModule implements DashboardModule {
     }
 
     @Override
-    public void onRequest(NanoHTTPD.IHTTPSession session) {
+    public NanoHTTPD.Response onRequest(NanoHTTPD.IHTTPSession session) {
+        return NanoHTTPD.newFixedLengthResponse(NanoHTTPD.Response.Status.OK, "plain/text", "Not implemented");
     }
 
     @Override
@@ -33,4 +34,5 @@ public abstract class AbstractDashboardModule implements DashboardModule {
     public boolean isEnabled() {
         return this.enabled;
     }
+
 }

@@ -2,16 +2,14 @@ package ro.mastermindsrobotics.dashboard.module.core;
 
 import android.util.Log;
 
-import java.io.File;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
+import fi.iki.elonen.NanoHTTPD;
 import ro.mastermindsrobotics.dashboard.generated.ConfigurableRegistry;
 import ro.mastermindsrobotics.dashboard.module.AbstractDashboardModule;
 
@@ -49,6 +47,98 @@ public class ConfigurableVariablesModule extends AbstractDashboardModule {
         logClassesAndFields();
     }
 
+    private NanoHTTPD.Response requestGET(NanoHTTPD.IHTTPSession session) {
+        Map<String, String> params = session.getParms();
+        String requestedClass = params.get("class");
+
+        Log.d(TAG, "requestGET called, requestedClass: " + requestedClass);
+
+        if (requestedClass != null) {
+            ClassMetadata meta = classesAndFields.get(requestedClass);
+
+            if (meta == null) {
+                Log.d(TAG, "Class not found: " + requestedClass);
+                return NanoHTTPD.newFixedLengthResponse(
+                        NanoHTTPD.Response.Status.NOT_FOUND,
+                        "application/json",
+                        "{\"error\": \"Class not found: " + requestedClass + "\"}"
+                );
+            }
+
+            List<Object> response = new ArrayList<>();
+            response.add(buildClassObject(meta));
+
+            String json = new com.google.gson.Gson().toJson(response);
+            Log.d(TAG, "Single class response: " + json);
+
+            return NanoHTTPD.newFixedLengthResponse(
+                    NanoHTTPD.Response.Status.OK,
+                    "application/json",
+                    json
+            );
+        }
+
+        List<Object> response = new ArrayList<>();
+
+        for (ClassMetadata meta : classesAndFields.values()) {
+            response.add(buildClassObject(meta));
+        }
+
+        String json = new com.google.gson.Gson().toJson(response);
+        Log.d(TAG, "All classes response: " + json);
+
+        return NanoHTTPD.newFixedLengthResponse(
+                NanoHTTPD.Response.Status.OK,
+                "application/json",
+                json
+        );
+    }
+
+    private Map<String, Object> buildClassObject(ClassMetadata meta) {
+        Map<String, Object> classObj = new LinkedHashMap<>();
+        classObj.put("class", meta.clazz.getName());
+
+        List<Map<String, Object>> fields = new ArrayList<>();
+
+        for (Map.Entry<String, Field> entry : meta.fields.entrySet()) {
+            try {
+                Object value = entry.getValue().get(null);
+                Map<String, Object> field = new LinkedHashMap<>();
+
+                field.put("var", entry.getKey());
+                field.put("val", value);
+
+                fields.add(field);
+
+            } catch (IllegalAccessException ignored) {}
+        }
+
+        classObj.put("fields", fields);
+        return classObj;
+    }
+
+    private void requestPUT() {
+
+    }
+
+    @Override
+    public NanoHTTPD.Response onRequest(NanoHTTPD.IHTTPSession session) {
+        Log.d(TAG, "Request received: " + session.getMethod() + " " + session.getUri());
+        Log.d(TAG, "classesAndFields size: " + classesAndFields.size());
+
+        switch (session.getMethod()) {
+            case GET:
+                NanoHTTPD.Response response = requestGET(session);
+                Log.d(TAG, "Response created, status: " + response.getStatus());
+                return response;
+            default:
+                return NanoHTTPD.newFixedLengthResponse(
+                        NanoHTTPD.Response.Status.METHOD_NOT_ALLOWED,
+                        "application/json",
+                        "{\"error\": \"Method not allowed\"}"
+                );
+        }
+    }
     private void logClassesAndFields() {
         Log.d(TAG, "==== Configurable Classes Dump START ====");
 
